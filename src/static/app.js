@@ -499,6 +499,9 @@ document.addEventListener("DOMContentLoaded", () => {
     // Format the schedule using the new helper function
     const formattedSchedule = formatSchedule(details);
 
+    // Escape description for HTML attributes
+    const escapedDescription = details.description.replace(/"/g, '&quot;');
+
     // Create activity tag
     const tagHtml = `
       <span class="activity-tag" style="background-color: ${typeInfo.color}; color: ${typeInfo.textColor}">
@@ -554,19 +557,19 @@ document.addEventListener("DOMContentLoaded", () => {
       </div>
       <div class="share-buttons">
         <span class="share-label">Share:</span>
-        <button class="share-button twitter-share tooltip" data-activity="${name}" data-description="${details.description.replace(/"/g, '&quot;')}" title="Share on X">
+        <button class="share-button twitter-share tooltip" data-activity="${name}" data-description="${escapedDescription}" data-schedule="${formattedSchedule}" title="Share on X">
           <span class="share-icon">𝕏</span>
           <span class="tooltip-text">Share on X (Twitter)</span>
         </button>
-        <button class="share-button facebook-share tooltip" data-activity="${name}" data-description="${details.description.replace(/"/g, '&quot;')}" title="Share on Facebook">
+        <button class="share-button facebook-share tooltip" data-activity="${name}" data-description="${escapedDescription}" title="Share on Facebook">
           <span class="share-icon">f</span>
           <span class="tooltip-text">Share on Facebook</span>
         </button>
-        <button class="share-button linkedin-share tooltip" data-activity="${name}" data-description="${details.description.replace(/"/g, '&quot;')}" title="Share on LinkedIn">
+        <button class="share-button linkedin-share tooltip" data-activity="${name}" data-description="${escapedDescription}" title="Share on LinkedIn">
           <span class="share-icon">in</span>
           <span class="tooltip-text">Share on LinkedIn</span>
         </button>
-        <button class="share-button email-share tooltip" data-activity="${name}" data-description="${details.description.replace(/"/g, '&quot;')}" title="Share via Email">
+        <button class="share-button email-share tooltip" data-activity="${name}" data-description="${escapedDescription}" data-schedule="${formattedSchedule}" title="Share via Email">
           <span class="share-icon">✉</span>
           <span class="tooltip-text">Share via Email</span>
         </button>
@@ -612,10 +615,28 @@ document.addEventListener("DOMContentLoaded", () => {
     const linkedinShare = activityCard.querySelector(".linkedin-share");
     const emailShare = activityCard.querySelector(".email-share");
 
-    twitterShare.addEventListener("click", () => shareOnTwitter(name, details.description));
-    facebookShare.addEventListener("click", () => shareOnFacebook(name, details.description));
-    linkedinShare.addEventListener("click", () => shareOnLinkedIn(name, details.description));
-    emailShare.addEventListener("click", () => shareViaEmail(name, details.description, formattedSchedule));
+    twitterShare.addEventListener("click", (e) => {
+      const activityName = e.currentTarget.dataset.activity;
+      const description = e.currentTarget.dataset.description;
+      const schedule = e.currentTarget.dataset.schedule;
+      shareOnTwitter(activityName, description);
+    });
+    facebookShare.addEventListener("click", (e) => {
+      const activityName = e.currentTarget.dataset.activity;
+      const description = e.currentTarget.dataset.description;
+      shareOnFacebook(activityName, description);
+    });
+    linkedinShare.addEventListener("click", (e) => {
+      const activityName = e.currentTarget.dataset.activity;
+      const description = e.currentTarget.dataset.description;
+      shareOnLinkedIn(activityName, description);
+    });
+    emailShare.addEventListener("click", (e) => {
+      const activityName = e.currentTarget.dataset.activity;
+      const description = e.currentTarget.dataset.description;
+      const schedule = e.currentTarget.dataset.schedule;
+      shareViaEmail(activityName, description, schedule);
+    });
 
     activitiesList.appendChild(activityCard);
   }
@@ -889,7 +910,7 @@ document.addEventListener("DOMContentLoaded", () => {
   function shareOnTwitter(activityName, description) {
     const text = `Check out ${activityName} at Mergington High School! ${description}`;
     const url = window.location.href;
-    const twitterUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent(url)}`;
+    const twitterUrl = `https://x.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent(url)}`;
     window.open(twitterUrl, '_blank', 'width=600,height=400');
   }
 
