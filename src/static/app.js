@@ -552,6 +552,25 @@ document.addEventListener("DOMContentLoaded", () => {
             .join("")}
         </ul>
       </div>
+      <div class="share-buttons">
+        <span class="share-label">Share:</span>
+        <button class="share-button twitter-share tooltip" data-activity="${name}" data-description="${details.description.replace(/"/g, '&quot;')}" title="Share on X">
+          <span class="share-icon">𝕏</span>
+          <span class="tooltip-text">Share on X (Twitter)</span>
+        </button>
+        <button class="share-button facebook-share tooltip" data-activity="${name}" data-description="${details.description.replace(/"/g, '&quot;')}" title="Share on Facebook">
+          <span class="share-icon">f</span>
+          <span class="tooltip-text">Share on Facebook</span>
+        </button>
+        <button class="share-button linkedin-share tooltip" data-activity="${name}" data-description="${details.description.replace(/"/g, '&quot;')}" title="Share on LinkedIn">
+          <span class="share-icon">in</span>
+          <span class="tooltip-text">Share on LinkedIn</span>
+        </button>
+        <button class="share-button email-share tooltip" data-activity="${name}" data-description="${details.description.replace(/"/g, '&quot;')}" title="Share via Email">
+          <span class="share-icon">✉</span>
+          <span class="tooltip-text">Share via Email</span>
+        </button>
+      </div>
       <div class="activity-card-actions">
         ${
           currentUser
@@ -586,6 +605,17 @@ document.addEventListener("DOMContentLoaded", () => {
         });
       }
     }
+
+    // Add click handlers for share buttons
+    const twitterShare = activityCard.querySelector(".twitter-share");
+    const facebookShare = activityCard.querySelector(".facebook-share");
+    const linkedinShare = activityCard.querySelector(".linkedin-share");
+    const emailShare = activityCard.querySelector(".email-share");
+
+    twitterShare.addEventListener("click", () => shareOnTwitter(name, details.description));
+    facebookShare.addEventListener("click", () => shareOnFacebook(name, details.description));
+    linkedinShare.addEventListener("click", () => shareOnLinkedIn(name, details.description));
+    emailShare.addEventListener("click", () => shareViaEmail(name, details.description, formattedSchedule));
 
     activitiesList.appendChild(activityCard);
   }
@@ -854,6 +884,33 @@ document.addEventListener("DOMContentLoaded", () => {
       console.error("Error signing up:", error);
     }
   });
+
+  // Social sharing functions
+  function shareOnTwitter(activityName, description) {
+    const text = `Check out ${activityName} at Mergington High School! ${description}`;
+    const url = window.location.href;
+    const twitterUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent(url)}`;
+    window.open(twitterUrl, '_blank', 'width=600,height=400');
+  }
+
+  function shareOnFacebook(activityName, description) {
+    const url = window.location.href;
+    const facebookUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}&quote=${encodeURIComponent(`${activityName}: ${description}`)}`;
+    window.open(facebookUrl, '_blank', 'width=600,height=400');
+  }
+
+  function shareOnLinkedIn(activityName, description) {
+    const url = window.location.href;
+    const linkedinUrl = `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(url)}`;
+    window.open(linkedinUrl, '_blank', 'width=600,height=400');
+  }
+
+  function shareViaEmail(activityName, description, schedule) {
+    const subject = `Join ${activityName} at Mergington High School`;
+    const body = `Hi!\n\nI wanted to share this exciting activity with you:\n\n${activityName}\n${description}\n\nSchedule: ${schedule}\n\nLearn more at: ${window.location.href}`;
+    const mailtoUrl = `mailto:?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+    window.location.href = mailtoUrl;
+  }
 
   // Expose filter functions to window for future UI control
   window.activityFilters = {
