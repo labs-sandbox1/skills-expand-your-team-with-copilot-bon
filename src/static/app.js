@@ -616,26 +616,16 @@ document.addEventListener("DOMContentLoaded", () => {
     const emailShare = activityCard.querySelector(".email-share");
 
     twitterShare.addEventListener("click", (e) => {
-      const activityName = e.currentTarget.dataset.activity;
-      const description = e.currentTarget.dataset.description;
-      const schedule = e.currentTarget.dataset.schedule;
-      shareOnTwitter(activityName, description);
+      shareOnTwitter(e.currentTarget.dataset.activity, e.currentTarget.dataset.description);
     });
     facebookShare.addEventListener("click", (e) => {
-      const activityName = e.currentTarget.dataset.activity;
-      const description = e.currentTarget.dataset.description;
-      shareOnFacebook(activityName, description);
+      shareOnFacebook(e.currentTarget.dataset.activity, e.currentTarget.dataset.description);
     });
     linkedinShare.addEventListener("click", (e) => {
-      const activityName = e.currentTarget.dataset.activity;
-      const description = e.currentTarget.dataset.description;
-      shareOnLinkedIn(activityName, description);
+      shareOnLinkedIn(e.currentTarget.dataset.activity, e.currentTarget.dataset.description);
     });
     emailShare.addEventListener("click", (e) => {
-      const activityName = e.currentTarget.dataset.activity;
-      const description = e.currentTarget.dataset.description;
-      const schedule = e.currentTarget.dataset.schedule;
-      shareViaEmail(activityName, description, schedule);
+      shareViaEmail(e.currentTarget.dataset.activity, e.currentTarget.dataset.description, e.currentTarget.dataset.schedule);
     });
 
     activitiesList.appendChild(activityCard);
